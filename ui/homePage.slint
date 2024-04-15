@@ -1,0 +1,1001 @@
+import { LogWarning } from "warning.slint";
+import { CONST_FUNCTION_GLOBAL } from "CONST_FUNCTION.slint";
+import { NAVBAR } from "navbar.slint";
+import { LineEdit, VerticalBox, ScrollView, ListView } from "std-widgets.slint";
+
+struct flight {
+    flightCode : string,
+    departure : string,
+    destination : string,
+    state : int,
+    planeCode : string,
+}
+
+export global functionAPP {
+    callback i();
+    // noi day se dat cac data cua ppp 
+    in-out property <[flight]> flightListPassengerPage : [
+        {flightCode : "LOIREA", departure : "25/11/2023 ", destination : "ha Noi", state : 3, planeCode : "MH370"},
+        {flightCode : "KASSADIN", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "ZED", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "YASUO", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VALUE", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VARUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "AATROXX", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "DARIUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "LOIREA", departure : "25/11/2023 ", destination : "ha Noi", state : 3, planeCode : "MH370"},
+        {flightCode : "KASSADIN", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "ZED", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "YASUO", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VALUE", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VARUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "AATROXX", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "DARIUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "LOIREA", departure : "25/11/2023 ", destination : "ha Noi", state : 3, planeCode : "MH370"},
+        {flightCode : "KASSADIN", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "ZED", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "YASUO", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VALUE", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "VARUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "AATROXX", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+        {flightCode : "DARIUS", departure : "25/11/2023 ", destination : "ha Noi", state : 1, planeCode : "MH370"},
+    ];
+
+    
+    // true thi ngay lap tuc lay du lieu cac o input
+    in-out property <string> inputSearchFlightCode_passPage;
+    in-out property <string> inputDayFliter_passPage;
+    in-out property <string> inputMonthFliter_passPage;
+    in-out property <string> inputYearFliter_passPage;
+    in-out property <string> inputDestinationFliter_passPage;
+
+    callback handleDataSearch_passPage(); // khi goi ham nay, se lay cac gia tri trong lineEdit, gan len tren cac bien phia tren
+    callback handleFilterListFlightPassPageByCPP(string, string, string, string, string);
+    handleDataSearch_passPage => {
+        handleFilterListFlightPassPageByCPP(inputDayFliter_passPage, inputMonthFliter_passPage, inputYearFliter_passPage, inputDestinationFliter_passPage, inputSearchFlightCode_passPage);
+    }
+}
+
+
+
+component passengerPage-search_filghtCode inherits Rectangle {
+    border-width: 4phx;
+    border-color: black;
+    in-out property <string> flightCode : "";
+    width: 400phx;
+    VerticalLayout {
+        alignment: center;
+        HorizontalLayout {
+            alignment: center;
+            spacing: 12phx;
+            Rectangle {
+                Text {text: "Flight Code";color: black;font-weight: 700;font-size: 16phx;}
+            }
+            Rectangle {
+                background: gray;
+                height: 40phx;
+                width: 250phx;
+                LineEdit {
+                    width: 100%;
+                    height: 100%;
+                    placeholder-text: "Enter Flight Code";
+                    horizontal-alignment: center;
+                    font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+                    edited => {
+                        functionAPP.inputSearchFlightCode_passPage = self.text;
+                    }
+                }
+            }
+        }
+    }
+}
+component passengerPage_search inherits Rectangle {
+    callback unFocusPassSearch();
+    VerticalLayout {
+        alignment: center;
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+            padding: 4phx;
+            padding-left: 0;
+            passengerPage-search-filghtCode {
+                height: 100%;
+            }
+            Rectangle {
+                width: 100phx;
+                background: #FF6347;
+                opacity: 1;
+                Text {
+                    text: "SEARCH";
+                    font-weight: 700;
+                }
+                touchArea := TouchArea {
+                    clicked => {
+                        // searchInfo.flightCode la ma chuyen bay trong o text
+                        unFocusPassSearch();
+                        functionAPP.handleDataSearch_passPage();
+                    }
+                }
+                states [
+                    hasPress when touchArea.pressed : {
+                        opacity : 0.5;
+                    }
+                ]
+            }
+        }
+    }
+}
+component boxFilterDAY inherits Rectangle {
+    callback getDayFliterBoxPP() -> string;
+    getDayFliterBoxPP => {
+        return inputDayFliter.text;
+    }
+    height: 50px;
+    HorizontalLayout {
+        Rectangle {
+            width : 40%;
+            background: #C0C0C0;
+            Text {text: "DAY";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;}
+            TouchArea {
+                clicked => {
+                    inputDayFliter.focus();
+                }
+            }
+        }
+        Rectangle {
+            background: gray;
+            horizontal-stretch: 7;
+            inputDayFliter := LineEdit {
+                width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+                horizontal-alignment: center;
+                placeholder-text: "Enter the date data field";
+                edited => {
+                    functionAPP.inputDayFliter_passPage = self.text;
+                }
+            }
+        }
+    }
+}
+component boxFilterMONTH inherits Rectangle {
+    callback getMonthFliterBoxPP() -> string;
+    getMonthFliterBoxPP => {
+        return inputMonthFilter.text;
+    }
+    height: 50px;
+    HorizontalLayout {
+        Rectangle {
+            width: 40%;
+            background: #C0C0C0;
+            Text {text: "MONTH";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;}
+            TouchArea {
+                clicked => {
+                    inputMonthFilter.focus();
+                }
+            }
+        }
+        Rectangle {
+            background: gray;
+            horizontal-stretch: 7;
+            inputMonthFilter := LineEdit {
+                width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;
+                placeholder-text: "Enter the month data field";
+                edited => {
+                    functionAPP.inputMonthFliter_passPage = self.text
+                }
+            }
+        }
+    }
+}
+component boxFilterYEAR inherits Rectangle {
+    callback getYearFliterBoxPP() -> string;
+    getYearFliterBoxPP => {
+        return inputYearFilter.text;
+    }
+    height: 50px;
+    HorizontalLayout {
+        Rectangle {
+            width: 40%;
+            background: #C0C0C0;
+            Text {text: "YEAR";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;}
+            TouchArea {
+                clicked => {
+                    inputYearFilter.focus();
+                }
+            }
+        }
+        Rectangle {
+            background: gray;
+            horizontal-stretch: 7;
+            inputYearFilter := LineEdit {
+                width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;
+                placeholder-text: "Enter the year data field";
+                edited => {
+                    functionAPP.inputYearFliter_passPage = self.text;
+                }
+            }
+        }
+    }
+}
+component boxFilterDESTINATION inherits Rectangle {
+    callback getDesFliterBoxPP() -> string;
+    getDesFliterBoxPP => {
+        return inputDesFilter.text;
+    }
+    height: 50px;
+    HorizontalLayout {
+        Rectangle {
+            width: 40%;
+            background: #C0C0C0;
+            Text {text: "DESTINATION";font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;}
+            TouchArea {
+                clicked => {
+                    inputDesFilter.focus();
+                }
+            }
+        }
+        Rectangle {
+            background: gray;
+            horizontal-stretch: 7;
+            inputDesFilter := LineEdit {
+                width: 100%; height: 100%;font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;horizontal-alignment: center;
+                placeholder-text: "Enter the destination data field";
+                edited => {
+                    functionAPP.inputDestinationFliter_passPage = self.text;
+                }
+            }
+        }
+    }
+}
+component blockClickPassenger inherits Rectangle {
+    callback unfocusFilterThere();
+    height: 100phx;
+    VerticalLayout {
+        alignment: end;
+        HorizontalLayout {
+            alignment: center;
+            Rectangle {
+                btnArea := TouchArea {
+                    clicked => {
+                        unfocusFilterThere();
+                        functionAPP.handleDataSearch_passPage();
+                    }
+                }
+                width: 200phx;
+                height: 80phx;
+                background: #FDF5E6;
+                Text {text: "FILTER";color: black; font-size:16phx; font-weight: 700;}
+                states [
+                    ac when btnArea.pressed : {
+                        background: #FFF;
+                    }
+                ]
+            }
+        }
+    }
+}
+component FilterBoxFlightPassenger inherits Rectangle {
+    callback unfocusBlockClickFilter();
+    background: wheat;
+    border-width: 20phx;
+    border-color: transparent;
+    VerticalLayout {
+        spacing : 15px;
+        alignment: center;
+        padding: 20phx;
+        Rectangle {
+            width: 100%; height : 100phx; background: transparent;
+            Text {text: "FILTER_BY_FIELD";color: black; font-size: 28phx;}
+        }
+        boxFilterDAY {}
+        boxFilterMONTH {}
+        boxFilterYEAR {}
+        boxFilterDESTINATION {}
+        blockClickPassenger {
+            unfocusFilterThere => {
+                unfocusBlockClickFilter();
+            }
+        }
+    }
+}
+component itemListPass inherits Rectangle {
+    in-out property <int> stt;
+    in-out property <string> flightCode;
+    in-out property <string> departure;
+    in-out property <string> destination;
+    in-out property <int> states;
+    in-out property <string> planeCode;
+    drop-shadow-blur: 5phx;
+    drop-shadow-color: red;
+    drop-shadow-offset-y: 2phx;
+    width: 100%;
+    height: 40phx;
+    background: wheat;
+    itemArea := TouchArea {
+        clicked => {
+            CONST-FUNCTION-GLOBAL.page_number_SHOW = 5;
+        }
+    }
+    HorizontalLayout {
+        alignment: space-around;
+        Rectangle {width: 5%;  height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: stt; color : black;}}
+        Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: flightCode; color : black;}}
+        Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: departure; color : black;}}
+        Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: destination; color : black;}}
+        Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text:  states == 0 ? "Huy chuyen" : (states == 1 ? "Con ve" : (states == 2 ? "Het ve" : "Hoan thanh")) ; color : black;}}
+        Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: planeCode; color : black;}}
+    }
+    states [
+        hasPress when itemArea.pressed == true : {
+            background : #ffdcf9;
+        }
+        hasHover when itemArea.has-hover : {
+            background : #FF9999;
+        }
+    ]
+}
+component listFlightPassenger inherits Rectangle {
+    VerticalLayout {
+        VerticalLayout {
+            padding: 4px;
+            Rectangle {
+                drop-shadow-blur: 5phx;
+                drop-shadow-color: red;
+                drop-shadow-offset-y: 2phx;
+                width: 100%;
+                height: 40phx;
+                background: #C0C0C0;
+                HorizontalLayout {
+                    alignment: space-around;
+                    Rectangle {width: 5%;  height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "STT"; color : black;}}
+                    Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "Flight Code"; color : black;}}
+                    Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "Departure"; color : black;}}
+                    Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "Destination"; color : black;}}
+                    Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text:  "State" ; color : black;}}
+                    Rectangle {width: 17%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "Plane Code"; color : black;}}
+                }
+            }
+        }
+        ListView {
+            width: 100%;
+            // height: 100%;
+            for data[index] in functionAPP.flightListPassengerPage : VerticalLayout {
+                padding: 4phx;
+                item := itemListPass{
+                    stt: index + 1;
+                    flightCode: functionAPP.flightListPassengerPage[0].flightCode;
+                    departure: data.departure;
+                    destination: data.destination;
+                    states: data.state;
+                    planeCode: data.planeCode;
+                }
+            }
+        }
+    }
+}
+
+component passengerPage_list_filterBox inherits Rectangle{
+    callback unfocusBlockFliter();
+    height: (CONST-FUNCTION-GLOBAL.MAX_HEIGHT * 0.92)* 0.865;
+    border-width: 2phx;
+    border-color: black;
+    VerticalLayout {
+        padding: 34phx;
+        vertical-stretch: 1;
+        HorizontalLayout {
+            spacing: 12phx;
+            listFlightPassenger := Rectangle {
+                horizontal-stretch: 7;
+                listFlightPassenger {}
+            }
+            filterPassager := Rectangle {
+                horizontal-stretch: 3;
+                FilterBoxFlightPassenger {unfocusBlockClickFilter => {
+                    unfocusBlockFliter();
+                }}
+            }
+        }
+    }
+}
+// cac trang page chinh
+component passengerPage inherits Rectangle {
+    callback unFocusPassPage();
+    VerticalLayout {
+        padding: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND;
+        padding-top: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND / 2;
+        padding-bottom: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND / 4;
+        passengerPage-search {
+            unFocusPassSearch => {
+                unFocusPassPage();
+            }
+        }
+        passengerPage-list-filterBox {unfocusBlockFliter => {unFocusPassPage()}}
+    }
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 0 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 0 : {
+            visible : false;
+        }
+    ]
+}
+component passengerListPage inherits Rectangle {
+    width: 100phx; height: 100phx;background: red; Text {text: "Danh Sach Hanh Khach";}
+    TouchArea {
+        clicked => {
+            CONST-FUNCTION-GLOBAL.SHOW_WARNING_ERORR("CANH BAO BAO MAT");
+            // CONST-FUNCTION-GLOBAL.page_number_SHOW = 0;
+        }
+    }
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 5 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 5 : {
+            visible : false;
+        }
+    ]
+}
+component ticketPage inherits Rectangle {
+    width: 100phx; height: 100phx;background: red; Text {text: "Ve CHuyen Bay";}
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 1 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 1 : {
+            visible : false;
+        }
+    ]
+}
+component planePage inherits Rectangle {
+    width: 100phx; height: 100phx;background: red; Text {text: "May Bay";}
+
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 2 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 2 : {
+            visible : false;
+        }
+    ]
+}
+component flightPage inherits Rectangle {
+    width: 100phx; height: 100phx;background: red; Text {text: "Chuyen Bay";}
+
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 3 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 3 : {
+            visible : false;
+        }
+    ]
+}
+
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+// UI Statistical
+
+export struct statistical_global_struct {
+    statistical_global_struct_idPlane : string,
+    statistical_global_struct_typePlane : string,
+    statistical_global_struct_flightCount : int,
+}
+
+export global statistical_global {
+    in-out property <statistical_global_struct> statistical_global_infoPlane : {
+        statistical_global_struct_idPlane: "ID PLANE", statistical_global_struct_typePlane: "TYPE PLANE", statistical_global_struct_flightCount : 0
+    };
+    //-------//
+    in-out property <int> chose;
+    in-out property <int> tmp;
+    in-out property <string> Temp : "";
+}
+
+export global statistical_data {
+    in-out property <[statistical_global_struct]> planeListStatistical : [
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "ZED", statistical_global_struct_typePlane: "MH370", statistical_global_struct_flightCount: 200},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+        {statistical_global_struct_idPlane: "LOIREA", statistical_global_struct_typePlane: "BOING", statistical_global_struct_flightCount: 20},
+    ];
+
+    in-out property <string> inputPlaneCODE_Statistical;
+    // 1 -> ID
+    // 2 -> TYPE
+    // 3 -> flightCount
+    in-out property <int> input_SORT;
+
+    callback statistical_handle_data();
+    callback statistical_getSLINT_data(string, int);
+    statistical_handle_data => {
+        statistical_getSLINT_data(inputPlaneCODE_Statistical, input_SORT);
+     }
+}
+
+component statistical_search_planeCode inherits Rectangle {
+    border-width: 3phx;
+    border-color: black;  
+    width: 440phx;
+    in-out property <string> planeCode: "";
+    VerticalLayout {
+        alignment: center;
+        HorizontalLayout {
+            spacing: 12phx;
+            alignment: center;
+            Text {text: "Plane Code"; color: black; font-size: 30phx;}
+            Rectangle {
+                background: #333333;
+                height: 40phx;
+                width: 250phx;
+                planeCode_input := LineEdit {
+                    horizontal-alignment: center;
+                    height: parent.height;
+                    width: parent.width;
+                    placeholder-text: "Enter Plane Code";
+                    font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+                    edited => {
+                        statistical_data.inputPlaneCODE_Statistical = self.text;
+                        statistical_global.Temp = statistical_data.inputPlaneCODE_Statistical;
+                    }
+                }
+            }
+        }
+    }
+}
+
+component statistical_search inherits Rectangle{
+    callback unFocus_statistical_search();
+    VerticalLayout {
+        alignment: center;
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: center;
+            padding: 4phx;
+            padding-left: 5phx;
+            searchInfo :=  statistical_search_planeCode{
+                height: 95%;
+            }
+            Rectangle {
+                width: 100phx;   
+                background: #FF6347;
+                opacity: 1;
+                Text {
+                    text: "SEARCH";
+                    font-weight: 700;
+                }
+                touchArea := TouchArea {
+                    clicked => {
+                        //debug(searchInfo.planeCode);
+                        unFocus_statistical_search();
+                        statistical_data.inputPlaneCODE_Statistical = statistical_global.Temp;
+                        statistical_data.input_SORT = 0;
+                        statistical_data.statistical_handle_data();
+                    }
+                }
+                states [
+                    hasPress when touchArea.pressed : {
+                        opacity : 0.5;
+                    }
+                ]
+            }
+        }
+    }
+}
+
+component statistical_sortBox_idPlane inherits Rectangle {
+    callback unFocus_statistical_sortBox_idPlane();
+    width: 250phx;
+    height: 40phx;
+    background: #FF6347;
+    Text {text: "SORT_ID_PLANE";color: white; font-size: 15phx;}
+    buttonArea := TouchArea {
+        clicked => {
+            unFocus_statistical_sortBox_idPlane();
+            statistical_data.input_SORT = 1;
+            statistical_data.inputPlaneCODE_Statistical = "";
+            statistical_data.statistical_handle_data();
+        }
+    }
+    states [
+        ac when buttonArea.pressed : {
+            background: #db705d;
+        }
+    ]
+}
+
+component statistical_sortBox_typePlane inherits Rectangle {
+    callback unFocus_statistical_sortBox_typePlane();
+    width: 250phx;
+    height: 40phx;
+    background: #FF6347;
+    Text {text: "SORT_TYPE_PLANE";color: white; font-size: 15phx;}
+    buttonArea := TouchArea {
+        clicked => {
+            unFocus_statistical_sortBox_typePlane();
+            statistical_data.input_SORT = 2;
+            statistical_data.inputPlaneCODE_Statistical = "";
+            statistical_data.statistical_handle_data();
+        }
+    }
+    states [
+        ac when buttonArea.pressed : {
+            background: #db705d;
+        }
+    ]
+}
+
+component statistical_sortBox_flightCount inherits Rectangle {
+    callback unFocus_statistical_sortBox_flightCount ();
+    width: 250phx;
+    height: 40phx;
+    background: #FF6347;
+    
+    Text {text: "SORT_FLIGHT_COUNT";color: white; font-size: 15phx;}
+    buttonArea := TouchArea {
+        clicked => {
+            unFocus_statistical_sortBox_flightCount ();
+            statistical_data.input_SORT = 3;
+            statistical_data.inputPlaneCODE_Statistical = "";
+            statistical_data.statistical_handle_data();
+        }
+    }
+    states [
+        ac when buttonArea.pressed : {
+            background: #db705d;
+        }
+    ]
+}
+
+component statistical_sortBox inherits Rectangle {
+    callback unFocus_statistical_sortBox ();
+    background: wheat;
+    border-width: 3phx;
+    border-color: #2b0802;
+    VerticalLayout {
+        alignment: center;
+        padding: 15phx;
+        Rectangle {
+            Text {text: "SORT";color: black; font-size: 20phx;}
+        }
+        HorizontalLayout {
+            spacing: 15phx;
+            alignment: center;
+            padding: 10phx;
+            statistical_sortBox_idPlane {
+                unFocus_statistical_sortBox_idPlane => {unFocus_statistical_sortBox()}
+            }
+            statistical_sortBox_typePlane {
+                unFocus_statistical_sortBox_typePlane => {unFocus_statistical_sortBox()}
+            }
+            statistical_sortBox_flightCount {
+                unFocus_statistical_sortBox_flightCount => {unFocus_statistical_sortBox()}
+            }
+        }
+    }
+}
+
+
+component  statistical_search_sortBox inherits Rectangle {
+    callback unFocus_statistical_search_sortBox ();
+        HorizontalLayout {
+            alignment: center;
+            padding: 20phx;
+            spacing: 300phx;
+            vertical-stretch: 1;
+            height: (CONST-FUNCTION-GLOBAL.MAX_HEIGHT * 0.15);
+            VerticalLayout {
+                alignment: center;
+                statistical_search {
+                    height: parent.height * 0.7;
+                    unFocus_statistical_search => {unFocus_statistical_search_sortBox()}
+                }
+            }
+            statistical_sortBox {
+                unFocus_statistical_sortBox => {unFocus_statistical_search_sortBox()}
+            }
+        }
+}
+
+component statistical_list_item inherits Rectangle {
+    callback unFocus_statistical_list_item();
+    in-out property <int> stt;
+    in-out property <bool> check : false; 
+    in-out property <string> idPlane;
+    in-out property <int> filghtCount;
+    in-out property <string> typePlane;
+    border-width: 2phx;
+    border-color: red;
+    width: 100%;
+    height: 40phx;
+    background: wheat;
+    itemArea := TouchArea {
+        clicked => {
+            check = statistical_global.chose == stt ? false : true;
+            statistical_global.chose = !check ? -1 : stt ;
+            statistical_global.statistical_global_infoPlane.statistical_global_struct_idPlane = !check ? "ID PLANE" : idPlane;
+            statistical_global.statistical_global_infoPlane.statistical_global_struct_typePlane = !check ? "TYPE PLANE" : typePlane;
+            statistical_global.statistical_global_infoPlane.statistical_global_struct_flightCount = !check ? 0 : filghtCount;
+            unFocus_statistical_list_item();
+        }
+    }
+    HorizontalLayout {
+        alignment: space-around;
+        Rectangle {width: 20%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: stt; color : black;}}
+        Rectangle {width: 30%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: idPlane; color : black;}}
+        Rectangle {width: 40%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: filghtCount; color : black;}}
+    }
+    
+    states [
+        active-hover when itemArea.has-hover && stt != statistical_global.chose: {
+            background : #FF9999;
+        }
+        active-hover-chose when itemArea.has-hover && stt == statistical_global.chose : {
+            background : #1f92c7;
+        }
+        chose when stt == statistical_global.chose : {
+            background: #d41a1a;
+        }
+    ]
+}
+
+component statistical_list inherits Rectangle{
+    callback unFocus_statistical_list();
+    VerticalLayout {
+        VerticalLayout {
+            padding: 4px;
+            Rectangle {
+                drop-shadow-blur: 5phx;
+                drop-shadow-color: red;
+                drop-shadow-offset-y: 2phx;
+                width: 100%;
+                height: 40phx;
+                background: #C0C0C0;
+                HorizontalLayout {
+                    alignment: space-around;
+                    Rectangle {width: 20%;  height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "STT"; color : black;}}
+                    Rectangle {width: 30%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "ID PLANE"; color : black;}}
+                    Rectangle {width: 40%; height: 100%; border-width: 1phx; border-color: whitesmoke; Text {font-size: CONST-FUNCTION-GLOBAL.FONTSIZE ;text: "FILGHT COUNT"; color : black;}} }  
+            }
+        }
+        ListView {
+            width: 100%;
+            for data[index] in statistical_data.planeListStatistical : VerticalLayout {
+                padding: 4phx;
+                Pr := statistical_list_item {
+                    stt : index + 1;
+                    idPlane: data.statistical_global_struct_idPlane;
+                    filghtCount: data.statistical_global_struct_flightCount;
+                    typePlane: data.statistical_global_struct_typePlane;
+                    unFocus_statistical_list_item => {unFocus_statistical_list()}
+                }
+            }
+        }
+    }
+}
+
+component statistical_boxInfoPlane_idPlane inherits Rectangle {
+    HorizontalLayout {
+        Rectangle {
+            width: 200phx;
+            height: 50px;
+            background: #FF6347;
+            Text {
+                text: "ID PLANE";
+                font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+            }
+        }
+        Rectangle {
+            background: gray;
+            dataInfo := Text {
+                color: white;
+                horizontal-alignment: center;
+                text: statistical_global.statistical_global_infoPlane.statistical_global_struct_idPlane;
+                font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+            }
+        }
+    }
+}
+
+component statistical_boxInfoPlane_typePlane inherits Rectangle {
+    HorizontalLayout {
+        Rectangle {
+            width: 200phx;
+            height: 50px;
+            background: #FF6347;
+            Text {
+                text: "TYPE PLANE";
+                font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+            }
+        }
+        Rectangle {
+            background: gray;
+            dataInfo := Text {
+                color: white;
+                horizontal-alignment: center;
+                text: statistical_global.statistical_global_infoPlane.statistical_global_struct_typePlane;
+                font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+            }
+        }
+    }
+}
+
+component statistical_boxInfoPlane_flightCount inherits Rectangle {
+    HorizontalLayout {
+        Rectangle {
+            width: 200phx;
+            height: 50px;
+            background: #FF6347;
+            Text {
+                text: "FLIGHT COUNT";
+                font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+            }
+        }
+        Rectangle {
+            background: gray;
+            dataInfo := Text {
+                color: white;
+                horizontal-alignment: center;
+                text: statistical_global.statistical_global_infoPlane.statistical_global_struct_flightCount;
+                font-size: CONST-FUNCTION-GLOBAL.FONTSIZE;
+            }
+        }
+    }
+}
+
+component statistical_boxInfoPlane inherits Rectangle {
+    background: wheat;
+    VerticalLayout {
+        alignment: center;
+        padding: 20phx;
+        spacing: 25phx;
+        HorizontalLayout {
+            alignment: center;
+            padding: 50phx;
+            Text {
+                text: "INFORMATION";
+                color: black;
+                font-size: 30phx;
+                font-weight: 50;
+            }
+        }
+        statistical_boxInfoPlane_idPlane {}
+        statistical_boxInfoPlane_typePlane {}
+        statistical_boxInfoPlane_flightCount {}
+    }
+}
+
+component statistical_list_boxInfoPlane inherits Rectangle{
+    callback unFocus_statistical_list_boxInfoPlane();
+    height: (CONST-FUNCTION-GLOBAL.MAX_HEIGHT * 0.65);
+    border-width: 2phx;
+    border-color: black;
+    VerticalLayout {
+        padding: 34phx;
+        vertical-stretch: 1;
+        HorizontalLayout {
+            spacing: 12phx;
+            listFlightPassenger := Rectangle {
+                width: 70%;
+                statistical_list {
+                    unFocus_statistical_list => {unFocus_statistical_list_boxInfoPlane()}
+                }
+            }
+            statistical_boxInfoPlane {
+                y : 0;
+                width: 30%;
+            }
+        }
+    }
+}
+
+component statistical inherits Rectangle {
+    callback unFocus_statistical();
+    VerticalLayout {
+        padding: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND;
+        padding-top: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND / 2;
+        padding-bottom: CONST-FUNCTION-GLOBAL.SPACEAPPAROUND / 4;
+        statistical_search_sortBox {
+            vertical-stretch: 1;
+            unFocus_statistical_search_sortBox => {unFocus_statistical()}
+        }
+        statistical_list_boxInfoPlane {vertical-stretch: 9;
+            unFocus_statistical_list_boxInfoPlane => {unFocus_statistical()}
+        }
+    }
+    states [
+        show when CONST-FUNCTION-GLOBAL.page_number_SHOW == 4 : {
+            visible : true;
+        }
+        hiden when CONST-FUNCTION-GLOBAL.page_number_SHOW != 4 : {
+            visible : false;
+        }
+    ]
+}
+
+// UI Statistical
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+
+
+export component homePage inherits Window {
+    callback unFocusALLFoucus();
+    unFocusALLFoucus => {
+        focusBackground.focus();
+    }
+    width: CONST-FUNCTION-GLOBAL.MAX_WIDTH;
+    height: CONST-FUNCTION-GLOBAL.MAX_HEIGHT;
+    background: #FDF5E6;
+    focusBackground := FocusScope {}
+
+    warning := LogWarning {
+        x: 0;
+        y: 0;
+        z: 2;
+        visible: CONST-FUNCTION-GLOBAL.show_warning;
+    }
+    HorizontalLayout {
+        alignment: center;
+        VerticalLayout {
+            alignment: start;
+            navbar := NAVBAR {z: 1;}
+            Rectangle {
+                width: CONST-FUNCTION-GLOBAL.MAX_WIDTH;
+                height: CONST-FUNCTION-GLOBAL.MAX_HEIGHT * 0.92;
+                passengerPage {
+                    z : 1; 
+                    unFocusPassPage => {
+                        unFocusALLFoucus();
+                    }
+                }
+                ticketPage {z: 1;}
+                planePage {z : 1;}
+                flightPage {z : 1;}
+                Rectangle {
+                    //width: CONST-FUNCTION-GLOBAL.MAX_WIDTH;
+                    //height: 92%;
+                    statistical {
+                        z : 1;
+                        unFocus_statistical => {unFocusALLFoucus()}
+                    }
+                }
+                passengerListPage {z : 1;}
+                // day se la phan phan page
+            }
+        }
+    }
+}
